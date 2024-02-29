@@ -56,7 +56,8 @@ class _RoundPageState extends State<RoundPage> {
       gameRound['player1'] = player1;
       gameRound['player2'] = player2;
       gameRound['mission_points'] = missionPoints;
-      gameRound['victory_player1'] = _verificarVitoria(player1, player2, missionPoints);
+      gameRound['victory_player1'] =
+          _verificarVitoria(player1, player2, missionPoints);
       await gameRound.save();
 
       // Navegue para a tela de Ranking
@@ -69,7 +70,8 @@ class _RoundPageState extends State<RoundPage> {
 
   Future<ParseObject> _buscarJogador(String username) async {
     try {
-      final query = QueryBuilder(ParseObject('Player'))..whereEqualTo('username', username);
+      final query = QueryBuilder(ParseObject('Player'))
+        ..whereEqualTo('username', username);
       final response = await query.query();
       return response.results!.first as ParseObject;
     } catch (e) {
@@ -79,7 +81,8 @@ class _RoundPageState extends State<RoundPage> {
     }
   }
 
-  bool _verificarVitoria(ParseObject player1, ParseObject player2, int missionPoints) {
+  bool _verificarVitoria(
+      ParseObject player1, ParseObject player2, int missionPoints) {
     // Lógica para verificar vitória com base nos missionPoints
     return player1['mission_points'] > player2['mission_points'];
   }
