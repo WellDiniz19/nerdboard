@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:nerdboard/pages/LoginPage.dart';
-import 'package:nerdboard/pages/SignUpPage.dart';
+import 'package:nerdboard/views/LoginPage.dart';
+import 'package:nerdboard/views/SignUpPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
