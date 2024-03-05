@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'NERD BOARD',
+      title: 'Champs Brasileiro 2024 Etapa 1',
       initialRoute: '/',
       routes: {
         '/': (context) => LoginPage(),
