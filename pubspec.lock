@@ -73,14 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: d57953e10f9f8327ce64a508a355f0b1ec902193f66288e8cb5070e7c47eeb2d
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.6"
   dbus:
     dependency: transitive
     description:
@@ -273,7 +265,7 @@ packages:
     source: hosted
     version: "2.0.1"
   parse_server_sdk:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: parse_server_sdk
       sha256: "838c5c41a8392dc0009ef975cfe2d75945bd1e88a3f761940b4ffd5bb8a4c339"

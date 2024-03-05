@@ -51,6 +51,7 @@ class _RoundPageState extends State<RoundPage> {
       final player1 = await _buscarJogador(widget.player1Name);
       final player2 = await _buscarJogador(widget.player2Name);
 
+
       // Registre o resultado do jogo no Parse Server
       final gameRound = GameRound();
       gameRound['player1'] = player1;
