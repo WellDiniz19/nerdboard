@@ -83,8 +83,11 @@ class _RoundPageState extends State<RoundPage> {
     // Lógica para verificar vitória com base nos missionPoints
     return player1['mission_points'] > player2['mission_points'];
   }
+<<<<<<< HEAD
 
   GameRound() {}
 
 
+=======
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
 }

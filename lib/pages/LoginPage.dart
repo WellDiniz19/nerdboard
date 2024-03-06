@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
+<<<<<<< HEAD
 class LoginProvider extends ChangeNotifier {
   Future<void> signIn(
       String username, String password, BuildContext context) async {
+=======
+class AuthProvider extends ChangeNotifier {
+  Future<void> signIn(String username, String password,
+      BuildContext context) async {
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
     try {
       if (username.isEmpty || password.isEmpty) {
         _showSnackBar(context, 'Preencha todos os campos');
@@ -17,7 +23,11 @@ class LoginProvider extends ChangeNotifier {
       if (response.success) {
         // Login bem-sucedido
         print('Login bem-sucedido: ${user.objectId}');
+<<<<<<< HEAD
         Navigator.pushReplacementNamed(context, '/ranking');
+=======
+        Navigator.pushReplacementNamed(context, '/dashboard');
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
       } else {
         // Tratar erro de login
         _showSnackBar(
@@ -38,6 +48,10 @@ class LoginProvider extends ChangeNotifier {
   }
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -45,6 +59,12 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
+=======
+      appBar: AppBar(
+        title: Text('NERD BOARD - Login'),
+      ),
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -67,7 +87,11 @@ class LoginPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     final authProvider =
+<<<<<<< HEAD
                         Provider.of<LoginProvider>(context, listen: false);
+=======
+                    Provider.of<AuthProvider>(context, listen: false);
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
                     await authProvider.signIn(
                       _usernameController.text.trim(),
                       _passwordController.text.trim(),
@@ -89,4 +113,8 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
