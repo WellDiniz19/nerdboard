@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:nerdboard/models/GameRound.dart';
@@ -71,10 +73,10 @@ class _RoundPageState extends State<RoundPage> {
     }
   }
 
-  Future<ParseObject> _buscarJogador(String username) async {
+  Future<ParseObject?> _buscarJogador(String username) async {
     try {
       final query = QueryBuilder(ParseObject('Player'))..whereEqualTo('username', username);
-      final response = await query.query();
+      final response = await _queryWithTimeout(query, Duration(seconds: 2));
 
       if (response.results != null && response.results!.isNotEmpty) {
         return response.results!.first as ParseObject;
@@ -87,11 +89,31 @@ class _RoundPageState extends State<RoundPage> {
       rethrow;
     }
   }
+
+  Future<ParseResponse> _queryWithTimeout(QueryBuilder query, Duration timeout) async {
+    final Completer<ParseResponse> completer = Completer();
+    Timer(timeout, () {
+      completer.completeError(TimeoutException('Tempo esgotado. Verifique sua conexão com a internet.'));
+    });
+
+    try {
+      final response = await query.query();
+      completer.complete(response);
+    } catch (e) {
+      completer.completeError(e);
+    }
+
+    return completer.future;
+  }
 }
 
 class GameRoundProvider extends ChangeNotifier {
-  Future<void> saveGameRound(ParseObject player1, ParseObject player2, int missionPoints) async {
+  Future<void> saveGameRound(ParseObject? player1, ParseObject? player2, int missionPoints) async {
     try {
+      if (player1 == null || player2 == null) {
+        throw Exception('Jogadores não encontrados');
+      }
+
       final gameRound = GameRound(player1: player1, player2: player2, missionPoints: missionPoints);
       await gameRound.GameRoundSave();
       notifyListeners();
