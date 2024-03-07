@@ -18,39 +18,38 @@ class _ResultsPageState extends State<ResultsPage> {
 
   Future<void> _getPlayers() async {
     try {
-      final query = QueryBuilder(ParseObject('_User'))
-        ..orderByDescending('ranking');
+      final query = QueryBuilder(ParseObject('_User'))..orderByDescending('ranking');
       final response = await query.query();
       setState(() {
         players = response.results as List<ParseObject>;
       });
     } catch (e) {
       print('Erro ao obter jogadores: $e');
-      // Trate o erro conforme necessário
+      // Handle the error as needed
     }
   }
 
   List<List<ParseObject>> realizarSorteio() {
     List<List<ParseObject>> sorteios = [];
 
-    // Clonar a lista de jogadores para não modificar a original
-    List<ParseObject> jogadoresDisponiveis = List.from(players);
+    // Clone the list of players to avoid modifying the original
+    List<ParseObject> availablePlayers = List.from(players);
 
-    while (jogadoresDisponiveis.length >= 2) {
-      final jogador1 = jogadoresDisponiveis.removeAt(0);
-      final jogador2 = _sortearOponente(jogador1, jogadoresDisponiveis);
-      jogadoresDisponiveis.remove(jogador2);
+    while (availablePlayers.length >= 2) {
+      final player1 = availablePlayers.removeAt(0);
+      final player2 = _sortearOponente(player1, availablePlayers);
+      availablePlayers.remove(player2);
 
-      sorteios.add([jogador1, jogador2]);
+      sorteios.add([player1, player2]);
     }
 
     return sorteios;
   }
 
-  ParseObject _sortearOponente(ParseObject jogador, List<ParseObject> jogadoresDisponiveis) {
+  ParseObject _sortearOponente(ParseObject player, List<ParseObject> availablePlayers) {
     final random = Random();
-    final index = random.nextInt(jogadoresDisponiveis.length);
-    return jogadoresDisponiveis[index];
+    final index = random.nextInt(availablePlayers.length);
+    return availablePlayers[index];
   }
 
   @override
@@ -71,11 +70,11 @@ class _ResultsPageState extends State<ResultsPage> {
     return ListView.builder(
       itemCount: sorteios.length,
       itemBuilder: (context, index) {
-        final jogador1 = sorteios[index][0];
-        final jogador2 = sorteios[index][1];
+        final player1 = sorteios[index][0];
+        final player2 = sorteios[index][1];
 
         return ListTile(
-          title: Text('${jogador1['username']} vs ${jogador2['username']}'),
+          title: Text('${player1['username']} vs ${player2['username']}'),
         );
       },
     );

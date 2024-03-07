@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:nerdboard/models/GameRound.dart';
+import 'package:provider/provider.dart';
 
 class RoundPage extends StatefulWidget {
   final String player1Name;
@@ -13,6 +15,12 @@ class RoundPage extends StatefulWidget {
 
 class _RoundPageState extends State<RoundPage> {
   TextEditingController _missionPointsController = TextEditingController();
+
+  @override
+  void dispose() {
+    _missionPointsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,7 @@ class _RoundPageState extends State<RoundPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                _salvarResultadoJogo();
+                _salvarResultadoJogo(context);
               },
               child: Text('Salvar Resultado'),
             ),
@@ -45,25 +53,21 @@ class _RoundPageState extends State<RoundPage> {
     );
   }
 
-  Future<void> _salvarResultadoJogo() async {
+  Future<void> _salvarResultadoJogo(BuildContext context) async {
     try {
       final missionPoints = int.parse(_missionPointsController.text);
       final player1 = await _buscarJogador(widget.player1Name);
       final player2 = await _buscarJogador(widget.player2Name);
 
-      // Registre o resultado do jogo no Parse Server
-      final gameRound = GameRound();
-      gameRound['player1'] = player1;
-      gameRound['player2'] = player2;
-      gameRound['mission_points'] = missionPoints;
-      gameRound['victory_player1'] = _verificarVitoria(player1, player2, missionPoints);
-      await gameRound.save();
+      // Use the GameRoundProvider to save the result
+      final gameRoundProvider = Provider.of<GameRoundProvider>(context, listen: false);
+      await gameRoundProvider.saveGameRound(player1, player2, missionPoints);
 
-      // Navegue para a tela de Ranking
+      // Navigate to the Ranking page
       Navigator.pushReplacementNamed(context, '/ranking');
     } catch (e) {
       print('Erro ao salvar resultado do jogo: $e');
-      // Trate o erro conforme necessário
+      // Handle the error more effectively (e.g., show a dialog to the user)
     }
   }
 
@@ -71,23 +75,29 @@ class _RoundPageState extends State<RoundPage> {
     try {
       final query = QueryBuilder(ParseObject('Player'))..whereEqualTo('username', username);
       final response = await query.query();
-      return response.results!.first as ParseObject;
+
+      if (response.results != null && response.results!.isNotEmpty) {
+        return response.results!.first as ParseObject;
+      } else {
+        throw Exception('Jogador não encontrado');
+      }
     } catch (e) {
       print('Erro ao buscar jogador: $e');
-      // Trate o erro conforme necessário
-      throw e;
+      // Handle the error more effectively (e.g., show a dialog to the user)
+      rethrow;
     }
   }
+}
 
-  bool _verificarVitoria(ParseObject player1, ParseObject player2, int missionPoints) {
-    // Lógica para verificar vitória com base nos missionPoints
-    return player1['mission_points'] > player2['mission_points'];
+class GameRoundProvider extends ChangeNotifier {
+  Future<void> saveGameRound(ParseObject player1, ParseObject player2, int missionPoints) async {
+    try {
+      final gameRound = GameRound(player1: player1, player2: player2, missionPoints: missionPoints);
+      await gameRound.GameRoundSave();
+      notifyListeners();
+    } catch (e) {
+      print('Erro ao salvar resultado do jogo: $e');
+      // Handle the error as needed
+    }
   }
-<<<<<<< HEAD
-
-  GameRound() {}
-
-
-=======
->>>>>>> 0bbf3211661c97c8b616918f5124ea6f61273ce9
 }
